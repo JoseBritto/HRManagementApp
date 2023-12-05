@@ -34,5 +34,19 @@ public class Coordinator {
         return payrollManager;
     }
     
+    public boolean save() {
+        boolean r1= employeeManager.save();
+        boolean r2 = departmentManager.save();
+        return r1 && r2;
+        
+        //payrollManager.save();
+    }
     
+    public boolean load() {
+       boolean r1 = employeeManager.load();
+       boolean r2 = departmentManager.load();
+       return r1 && r2;
+       
+       //payrollManager.load();
+    }
 }

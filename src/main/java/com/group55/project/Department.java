@@ -1,6 +1,6 @@
 package com.group55.project;
 
-public class Department {
+public class Department implements java.io.Serializable {
     
         private int departmentID;
         private String departmentName;

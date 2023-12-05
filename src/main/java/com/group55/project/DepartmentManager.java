@@ -59,4 +59,22 @@ public class DepartmentManager {
             System.out.println(department.getDepartmentID() + " " + department.getDepartmentName());
         }
     }
+
+    public boolean save() {
+        return FileUtility.saveToFile("departments", departments);
+    }
+    
+    public boolean load() {
+        List<Department> departments = (List<Department>) FileUtility.loadFromFile("departments");
+        if(departments != null) {
+            this.departments = departments;
+            for(Department department : departments) {
+                if(department.getDepartmentID() >= nextDepartmentID) {
+                    nextDepartmentID = department.getDepartmentID() + 1;
+                }
+            }
+            return true;
+        }
+        return false;
+    }
 }

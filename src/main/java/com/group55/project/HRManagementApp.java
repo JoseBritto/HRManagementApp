@@ -12,7 +12,21 @@ import javafx.stage.Stage;
 public class HRManagementApp extends Application {
 
     public static void main(String[] args) {
+        var loadSuccess = Coordinator.getInstance().load();
+        if(!loadSuccess) {
+            System.out.println("Failed to load data from file");
+        }
+        else {
+            System.out.println("Loaded data from file");
+        }
         launch(args);
+        var saveSuccess = Coordinator.getInstance().save();
+        if(!saveSuccess) {
+            System.out.println("Failed to save data to file");
+        }
+        else {
+            System.out.println("Saved data to file");
+        }
     }
 
     @Override

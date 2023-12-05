@@ -92,26 +92,9 @@ public class EmployeeManagementContent extends VBox {
             return row;
         });
 
-        // Add dummy departments
         DepartmentManager departmentManager = Coordinator.getInstance().getDepartmentManager();
-        departmentManager.addDepartment(new Department(1, "Sales"));
-        departmentManager.addDepartment(new Department(2, "Marketing"));
-        departmentManager.addDepartment(new Department(3, "Human Resources"));
-        departmentManager.addDepartment(new Department(4, "Accounting"));
-        departmentManager.addDepartment(new Department(5, "IT"));
-        departmentManager.addDepartment(new Department(6, "Customer Service"));
-        departmentManager.addDepartment(new Department(7, "Research and Development"));
-
-        // Add some dummy data
         EmployeeManager employeeManager = Coordinator.getInstance().getEmployeeManager();
-        employeeManager.addEmployee("John", "Smith", departmentManager.getDepartment(1), "Sales Representative", LocalDate.now());
-        employeeManager.addEmployee("Jane", "Doe", departmentManager.getDepartment(2), "Marketing Manager", LocalDate.now());
-        employeeManager.addEmployee("Bob", "Jones", departmentManager.getDepartment(3), "Human Resources Manager", LocalDate.now());
-        employeeManager.addEmployee("Mary", "Johnson", departmentManager.getDepartment(4), "Accountant", LocalDate.now());
-        employeeManager.addEmployee("James", "Williams", departmentManager.getDepartment(5), "IT Manager", LocalDate.now());
-        employeeManager.addEmployee("Patricia", "Brown", departmentManager.getDepartment(6), "Customer Service Representative", LocalDate.now());
-        employeeManager.addEmployee("Michael", "Miller", departmentManager.getDepartment(7), "Research and Development Manager", LocalDate.now());
-
+       
         // Add the employees to the table        
         employeeTable.getItems().addAll(employeeManager.getAllEmployees());
 

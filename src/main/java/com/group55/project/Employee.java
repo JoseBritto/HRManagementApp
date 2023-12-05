@@ -1,10 +1,11 @@
 package com.group55.project;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 
-public class Employee {
+public class Employee implements Serializable {
 
     private int EmployeeID;
     private String firstName;

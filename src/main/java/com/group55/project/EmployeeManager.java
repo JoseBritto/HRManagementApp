@@ -84,4 +84,23 @@ public class EmployeeManager {
             }
         }
     }
+
+    public boolean save() {
+        return FileUtility.saveToFile("employees", employees);
+    }
+    
+    public boolean load() {
+        var loadedEmployees = (List<Employee>) FileUtility.loadFromFile("employees");
+        if(loadedEmployees == null) {
+            return false;
+        }
+        loadedEmployees.forEach(employee -> {
+            if(employee.getEmployeeID() >= nextEmployeeID) {
+                nextEmployeeID = employee.getEmployeeID() + 1;
+            }
+        });
+        employees.clear();
+        employees.addAll(loadedEmployees);
+        return true;
+    }
 }
