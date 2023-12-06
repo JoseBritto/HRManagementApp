@@ -3,6 +3,7 @@ package com.group55.project.ui;
 import com.group55.project.Coordinator;
 import com.group55.project.Department;
 import com.group55.project.Employee;
+import com.group55.project.Payroll;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
@@ -11,6 +12,7 @@ import javafx.scene.layout.VBox;
 
 public class PayrollManagementContent extends VBox {
 
+    private TableView<Department> departmentTable;
     private TableView<Employee> employeeTable;
 
     public PayrollManagementContent() {
@@ -94,7 +96,8 @@ public class PayrollManagementContent extends VBox {
                 if (event.getClickCount() == 2 && (!row.isEmpty())) {
                     Employee rowData = row.getItem();
                     System.out.println("Double click on: " + rowData);
-                    editPayrollAction();
+                    /*createPaycheckAction(null);*/
+                    new PayReportWindow(Coordinator.getInstance(), rowData).showAndWait();
                 }
             });
             return row;
@@ -103,12 +106,40 @@ public class PayrollManagementContent extends VBox {
         // Show edit dialog when user presses enter on a row
         employeeTable.setOnKeyPressed(event -> {
             if(event.getCode().equals(javafx.scene.input.KeyCode.ENTER)) {
-                editPayrollAction();
+                createPaycheckAction(null);
             }
         });
         
+        // Add a listener to the search box to filter the table
+        TextField searchField = (TextField) searchBox.getChildren().get(1);
+        searchField.textProperty().addListener((observable, oldValue, newValue) -> {
+            refresh();
+            employeeTable.getItems()
+                    .removeIf(employee -> !employee.getFirstName().toLowerCase().contains(newValue.toLowerCase())
+                            && !employee.getLastName().toLowerCase().contains(newValue.toLowerCase()));
+        });
+        
+        // Add context menu to create paychecks
+        var contextMenu = new ContextMenu();
+        var createPaycheckMenuItem = new MenuItem("Create Paycheck");
+        var showPayReportMenuItem = new MenuItem("Show Pay Report");
+        createPaycheckMenuItem.setOnAction(event -> {
+            createPaycheckAction(null);
+        });
+        showPayReportMenuItem.setOnAction(event -> {
+            var employee = employeeTable.getSelectionModel().getSelectedItem();
+            if(employee == null) {
+                return;
+            }
+            new PayReportWindow(Coordinator.getInstance(), employee).showAndWait();
+        });
+        
+        contextMenu.getItems().add(createPaycheckMenuItem);
+        contextMenu.getItems().add(showPayReportMenuItem);
+        employeeTable.setContextMenu(contextMenu);
+        
         // Add a departments table to the content
-        var departmentTable = new TableView<Department>();
+        departmentTable = new TableView<Department>();
         departmentTable.setPrefHeight(400);
         departmentTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
         
@@ -122,23 +153,60 @@ public class PayrollManagementContent extends VBox {
         // Add columns to the table
         departmentTable.getColumns().addAll(departmentIDColumn, departmentNameColumn2);
         
-        refresh();
+        // Add double click listener to the table rows
+        departmentTable.setRowFactory(tv -> {
+            TableRow<Department> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2 && (!row.isEmpty())) {
+                    Department rowData = row.getItem();
+                    System.out.println("Double click on: " + rowData);
+                    new PayReportWindow(Coordinator.getInstance(), rowData).showAndWait();
+                }
+            });
+            return row;
+        });
+        
+        var contextMenu2 = new ContextMenu();
+        var showPayReportMenuItem2 = new MenuItem("Show Pay Report");
+        showPayReportMenuItem2.setOnAction(event -> {
+            var department = departmentTable.getSelectionModel().getSelectedItem();
+            if(department == null) {
+                return;
+            }
+            new PayReportWindow(Coordinator.getInstance(), department).showAndWait();
+        });
+        
+        contextMenu2.getItems().add(showPayReportMenuItem2);
+        departmentTable.setContextMenu(contextMenu2);
+        
+        
         this.getChildren().addAll(searchBox, employeeTable, departmentTable);
+        refresh();
     }
 
-    private void editPayrollAction() {
-        var selectedItem = employeeTable.getSelectionModel().getSelectedItem();
-        if(selectedItem == null) {
+    private void createPaycheckAction(Employee employee) {
+        if(employee == null)
+            employee = employeeTable.getSelectionModel().getSelectedItem();
+        if(employee == null) {
             return;
         }
-        System.out.println("Double click on: " + selectedItem);
-        var dialog = new CreatePaycheck(Coordinator.getInstance(), selectedItem);
-        dialog.showAndWait();
+        var dialog = new CreatePaycheckDialog(Coordinator.getInstance(), employee);
+        var paycheck = dialog.showAndWait();
+        if(paycheck.isPresent()) {
+            var payrollManager = Coordinator.getInstance().getPayrollManager();
+            var payroll = payrollManager.getPayroll(employee.getEmployeeID());
+            if(payroll == null) {
+                payroll = payrollManager.addPayroll(new Payroll(employee.getEmployeeID(), paycheck.get().getHourlyWage()));
+            }
+            payroll.addPaycheck(paycheck.get());
+        }
         refresh();
     }
 
     private void refresh() {
         employeeTable.getItems().clear();
         employeeTable.getItems().addAll(Coordinator.getInstance().getEmployeeManager().getAllEmployees());
+        departmentTable.getItems().clear();
+        departmentTable.getItems().addAll(Coordinator.getInstance().getDepartmentManager().getDepartments());
     }
 }

@@ -1,11 +1,13 @@
 package com.group55.project;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
-public class Paycheck {
+public class Paycheck implements Serializable {
     
     private int employeeId;
     private double hourlyWage;
+    private double overtimeHourlyWage;
     
     private double basePay;
     private double overtimePay;
@@ -18,9 +20,10 @@ public class Paycheck {
     private LocalDate payPeriodStartDate;
     private LocalDate payPeriodEndDate;
     
-    public Paycheck(int employeeId, double hourlyWage, double hoursWorked, double overtimeHoursWorked, double bonus, double deductions, LocalDate payPeriodStartDate, LocalDate payPeriodEndDate) {
+    public Paycheck(int employeeId, double hourlyWage, double hoursWorked, double overtimeHourlyWage,double overtimeHoursWorked, double bonus, double deductions, LocalDate payPeriodStartDate, LocalDate payPeriodEndDate) {
         this.employeeId = employeeId;
         this.hourlyWage = hourlyWage;
+        this.overtimeHourlyWage = overtimeHourlyWage;
         this.hoursWorked = hoursWorked;
         this.overtimeHoursWorked = overtimeHoursWorked;
         this.bonus = bonus;
@@ -36,7 +39,7 @@ public class Paycheck {
     }
 
     public void calculateOvertimePay() {
-        overtimePay = hourlyWage * 1.5 * overtimeHoursWorked;
+        overtimePay = overtimeHourlyWage * overtimeHoursWorked;
     }
     
     public int getEmployeeId() {
@@ -45,6 +48,10 @@ public class Paycheck {
     
     public double getHourlyWage() {
         return hourlyWage;
+    }
+    
+    public double getOvertimeHourlyWage() {
+        return overtimeHourlyWage;
     }
     
     public double getBasePay() {
@@ -79,7 +86,7 @@ public class Paycheck {
         return payPeriodEndDate;
     }
     
-    public double calculateNetSalary() {
+    public double getNetPay() {
         // Net salary calculation logic here
         return basePay + overtimePay + bonus - deductions;
     }   

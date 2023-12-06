@@ -76,6 +76,19 @@ public class PayrollManager {
         Paycheck paycheck = paychecks.get(paychecks.size() - 1);
         return paycheck.getBasePay() + paycheck.getOvertimePay() + paycheck.getBonus() - paycheck.getDeductions();
     }
-       
+
+
+    public boolean load() {
+        var loadedPayrolls = (List<Payroll>) FileUtility.loadFromFile("payrolls");
+        if(loadedPayrolls == null) {
+            return false;
+        }
+        payrolls.clear();
+        payrolls.addAll(loadedPayrolls);
+        return true;
+    }
     
+    public boolean save() {
+        return FileUtility.saveToFile("payrolls", payrolls);
+    }
 }

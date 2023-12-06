@@ -103,4 +103,14 @@ public class EmployeeManager {
         employees.addAll(loadedEmployees);
         return true;
     }
+    
+    public List<Employee> getEmployeesByDepartmentID(int departmentID) {
+        var employeesInDepartment = new ArrayList<Employee>();
+        for (Employee employee : employees) {
+            if (employee.getDepartmentId() == departmentID) {
+                employeesInDepartment.add(employee);
+            }
+        }
+        return employeesInDepartment;
+    }
 }

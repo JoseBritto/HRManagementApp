@@ -58,10 +58,7 @@ public class HRManagementApp extends Application {
         Tab payrollTab = new Tab("Payrolls");
         payrollTab.setContent(createPayrollProcessingContent());
 
-        Tab reportingTab = new Tab("Reporting");
-        reportingTab.setContent(createReportingContent());
-
-        tabPane.getTabs().addAll(employeeTab, departmentsTab, payrollTab, reportingTab);
+        tabPane.getTabs().addAll(employeeTab, departmentsTab, payrollTab);
 
         //TODO: Remove this menu bar completely
         //root.setTop(menuBar);

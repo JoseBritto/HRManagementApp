@@ -2,12 +2,13 @@ package com.group55.project.ui;
 
 import com.group55.project.Coordinator;
 import com.group55.project.Employee;
+import com.group55.project.Paycheck;
 import com.group55.project.Payroll;
 import javafx.scene.control.Dialog;
 import javafx.scene.layout.*;
 import javafx.geometry.Insets;
-public class CreatePaycheck extends Dialog<Payroll> {
-    public CreatePaycheck(Coordinator coordinator, Employee employee) {
+public class CreatePaycheckDialog extends Dialog<Paycheck> {
+    public CreatePaycheckDialog(Coordinator coordinator, Employee employee) {
         this.setTitle("Create Paycheck");
         this.setHeaderText("Create Paycheck");
         
@@ -49,7 +50,7 @@ public class CreatePaycheck extends Dialog<Payroll> {
         
         var payEndDateLabel = new javafx.scene.control.Label("Pay End Date:");
         var payEndDateDatePicker = new javafx.scene.control.DatePicker();
-        payEndDateDatePicker.setValue(payroll.getNextPayEndDate());
+        payEndDateDatePicker.setValue(payroll.getSuggestedPayEndDate());
         payEndDateDatePicker.getEditor().setDisable(true);
         
         // Add the labels and text fields to the grid
@@ -77,60 +78,60 @@ public class CreatePaycheck extends Dialog<Payroll> {
         var okButton = (javafx.scene.control.Button) this.getDialogPane().lookupButton(javafx.scene.control.ButtonType.OK);
         
         okButton.addEventFilter(javafx.event.ActionEvent.ACTION, event -> {
-            if(hoursWorkedTextField.getText().isEmpty()) {
+            if(hoursWorkedTextField.getText().isEmpty() || overtimeTextField.getText().isEmpty() || hourlyRateTextField.getText().isEmpty() || overtimeRateTextField.getText().isEmpty() || bonusTextField.getText().isEmpty() || deductionsTextField.getText().isEmpty()) {
                 event.consume();
                 var alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
                 alert.setTitle("Error");
                 alert.setHeaderText("Error");
-                alert.setContentText("Hours worked cannot be empty");
+                alert.setContentText("All fields must be filled in");
                 alert.showAndWait();
                 return;
             }
-            if(overtimeTextField.getText().isEmpty()) {
+            
+            // Hours worked must be an integer or a decimal number
+            if(!isPositiveNumber(hoursWorkedTextField.getText().trim()) || !isPositiveNumber(overtimeTextField.getText().trim()) || !isPositiveNumber(hourlyRateTextField.getText().trim()) || !isPositiveNumber(overtimeRateTextField.getText().trim()) || !isPositiveNumber(bonusTextField.getText().trim()) || !isPositiveNumber(deductionsTextField.getText().trim())) {
                 event.consume();
                 var alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
                 alert.setTitle("Error");
                 alert.setHeaderText("Error");
-                alert.setContentText("Overtime cannot be empty");
+                alert.setContentText("Hours worked, overtime, hourly rate, overtime rate, bonus, and deductions must be positive numbers");
                 alert.showAndWait();
                 return;
             }
-            if(hourlyRateTextField.getText().isEmpty()) {
+            
+            if(payStartDateDatePicker.getValue().isAfter(payEndDateDatePicker.getValue()) || payStartDateDatePicker.getValue().isEqual(payEndDateDatePicker.getValue())) {
                 event.consume();
                 var alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
                 alert.setTitle("Error");
                 alert.setHeaderText("Error");
-                alert.setContentText("Hourly rate cannot be empty");
-                alert.showAndWait();
-                return;
-            }
-            if(overtimeRateTextField.getText().isEmpty()) {
-                event.consume();
-                var alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
-                alert.setTitle("Error");
-                alert.setHeaderText("Error");
-                alert.setContentText("Overtime rate cannot be empty");
-                alert.showAndWait();
-                return;
-            }
-            if(bonusTextField.getText().isEmpty()) {
-                event.consume();
-                var alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
-                alert.setTitle("Error");
-                alert.setHeaderText("Error");
-                alert.setContentText("Bonus cannot be empty");
-                alert.showAndWait();
-                return;
-            }
-            if(deductionsTextField.getText().isEmpty()) {
-                event.consume();
-                var alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
-                alert.setTitle("Error");
-                alert.setHeaderText("Error");
-                alert.setContentText("Deductions cannot be empty");
+                alert.setContentText("Pay start date cannot be after or the same day as pay end date");
                 alert.showAndWait();
                 return;
             }
         });
+        
+        this.setResultConverter(dialogButton -> {
+            if(dialogButton == javafx.scene.control.ButtonType.OK) {
+                var hoursWorked = Double.parseDouble(hoursWorkedTextField.getText().trim());
+                var overtime = Double.parseDouble(overtimeTextField.getText().trim());
+                var hourlyRate = Double.parseDouble(hourlyRateTextField.getText().trim());
+                var overtimeRate = Double.parseDouble(overtimeRateTextField.getText().trim());
+                var bonus = Double.parseDouble(bonusTextField.getText().trim());
+                var deductions = Double.parseDouble(deductionsTextField.getText().trim());
+                var payStartDate = payStartDateDatePicker.getValue();
+                var payEndDate = payEndDateDatePicker.getValue();
+                
+                return new Paycheck(employee.getEmployeeID(), hourlyRate, hoursWorked, overtimeRate, overtime, 
+                        bonus, deductions, payStartDate, payEndDate); 
+            }
+            return null;
+        });
+        
+        
+        
+    }
+    
+    private static boolean isPositiveNumber(String str) {
+        return str.matches("\\+?[0-9](\\.)?[0-9]?");
     }
 }

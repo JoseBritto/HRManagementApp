@@ -1,5 +1,7 @@
 package com.group55.project;
 
+import java.util.zip.Adler32;
+
 public class Coordinator {
     private EmployeeManager employeeManager;
     private DepartmentManager departmentManager;
@@ -37,16 +39,15 @@ public class Coordinator {
     public boolean save() {
         boolean r1= employeeManager.save();
         boolean r2 = departmentManager.save();
-        return r1 && r2;
+        boolean r3 = payrollManager.save();
+        return r1 && r2 && r3;
         
-        //payrollManager.save();
     }
     
     public boolean load() {
        boolean r1 = employeeManager.load();
        boolean r2 = departmentManager.load();
-       return r1 && r2;
-       
-       //payrollManager.load();
+       boolean r3 =  payrollManager.load();
+       return r1 && r2 && r3;
     }
 }

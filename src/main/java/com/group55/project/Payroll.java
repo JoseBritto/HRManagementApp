@@ -1,10 +1,11 @@
 package com.group55.project;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Payroll {
+public class Payroll implements Serializable {
     
     private int employeeId;
     private double hourlyWage;    
@@ -66,7 +67,7 @@ public class Payroll {
         return latestPayPeriodEndDate.plusDays(1);
     }
     
-    public LocalDate getNextPayEndDate() {
+    public LocalDate getSuggestedPayEndDate() {
         return getNextPayStartDate().plusDays(13);
     }
 }
