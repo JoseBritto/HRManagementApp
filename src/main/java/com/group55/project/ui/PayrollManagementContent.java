@@ -193,6 +193,18 @@ public class PayrollManagementContent extends VBox {
         var dialog = new CreatePaycheckDialog(Coordinator.getInstance(), employee);
         var paycheck = dialog.showAndWait();
         if(paycheck.isPresent()) {
+            // show a confirmation dialog
+            var alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Confirmation");
+            alert.setHeaderText("Confirmation");
+            alert.setContentText("Are you sure you want to create this paycheck?\n" +
+                    "Employee: " + employee.getFirstName() + " " + employee.getLastName() + "\n" +
+                            "Pay Period: " + paycheck.get().getPayPeriodStartDate() + "-" + paycheck.get().getPayPeriodEndDate() + "\n" +
+                            "Pay Amount: " + paycheck.get().getNetPay());
+            var result = alert.showAndWait();
+            if(result.isEmpty() || result.get() != ButtonType.OK) {
+                return;
+            }
             var payrollManager = Coordinator.getInstance().getPayrollManager();
             var payroll = payrollManager.getPayroll(employee.getEmployeeID());
             if(payroll == null) {

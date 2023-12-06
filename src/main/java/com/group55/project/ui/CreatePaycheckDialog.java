@@ -132,6 +132,6 @@ public class CreatePaycheckDialog extends Dialog<Paycheck> {
     }
     
     private static boolean isPositiveNumber(String str) {
-        return str.matches("\\+?[0-9](\\.)?[0-9]?");
+        return str.matches("\\+?[0-9]+(\\.)?([0-9]+)?");
     }
 }
