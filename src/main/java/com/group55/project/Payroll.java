@@ -4,7 +4,13 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+/*
+    1. John Darrell Tamayo, 101452155
+    2. Ashish Rajan Sherry, 101423478
+    3. Jose Britto Saaji, 101416601
+    4. Akorede Osunkoya, 101477407
 
+ */
 public class Payroll implements Serializable {
     
     private int employeeId;

@@ -3,7 +3,13 @@ package com.group55.project.ui;
 import com.group55.project.Coordinator;
 import com.group55.project.Department;
 import javafx.scene.control.Dialog;
+/*
+    1. John Darrell Tamayo, 101452155
+    2. Ashish Rajan Sherry, 101423478
+    3. Jose Britto Saaji, 101416601
+    4. Akorede Osunkoya, 101477407
 
+ */
 public class AddAndEditDepartmentDialog extends Dialog<String> {
     public AddAndEditDepartmentDialog(Coordinator coordinator) {
         this.setTitle("Add Department");

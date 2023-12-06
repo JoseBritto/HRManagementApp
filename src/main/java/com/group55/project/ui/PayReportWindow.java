@@ -1,5 +1,11 @@
 package com.group55.project.ui;
+/*
+    1. John Darrell Tamayo, 101452155
+    2. Ashish Rajan Sherry, 101423478
+    3. Jose Britto Saaji, 101416601
+    4. Akorede Osunkoya, 101477407
 
+ */
 import com.group55.project.*;
 import javafx.scene.chart.XYChart;
 import javafx.scene.layout.GridPane;
@@ -121,7 +127,7 @@ public class PayReportWindow extends Stage {
             if(payroll != null) 
                 paychecks= payRollManger.getPayroll(employee.getEmployeeID()).getPaychecks();
             if(!paychecks.isEmpty())
-                salarySeries.getData().add(new XYChart.Data<>(employee.getFirstName(), paychecks.getLast().getNetPay()));
+                salarySeries.getData().add(new XYChart.Data<>(employee.getFirstName(), paychecks.get(paychecks.size() - 1).getNetPay()));
             else 
                 salarySeries.getData().add(new XYChart.Data<>(employee.getFirstName(), 0));
                 
@@ -139,7 +145,7 @@ public class PayReportWindow extends Stage {
             if(payroll != null)
                 paychecks= payRollManger.getPayroll(employee.getEmployeeID()).getPaychecks();
             if(!paychecks.isEmpty())
-                hoursWorkedSeries.getData().add(new XYChart.Data<>(employee.getFirstName(), paychecks.getLast().getHoursWorked()));
+                hoursWorkedSeries.getData().add(new XYChart.Data<>(employee.getFirstName(), paychecks.get(paychecks.size() - 1).getHoursWorked()));
             else 
                 hoursWorkedSeries.getData().add(new XYChart.Data<>(employee.getFirstName(), 0));
         }
@@ -156,7 +162,7 @@ public class PayReportWindow extends Stage {
             if(payroll != null)
                 paychecks= payRollManger.getPayroll(employee.getEmployeeID()).getPaychecks();
             if(!paychecks.isEmpty())
-                overtimeHoursWorkedSeries.getData().add(new XYChart.Data<>(employee.getFirstName(), paychecks.getLast().getOvertimeHoursWorked()));
+                overtimeHoursWorkedSeries.getData().add(new XYChart.Data<>(employee.getFirstName(), paychecks.get(paychecks.size() - 1).getOvertimeHoursWorked()));
             else 
                 overtimeHoursWorkedSeries.getData().add(new XYChart.Data<>(employee.getFirstName(), 0));
         }

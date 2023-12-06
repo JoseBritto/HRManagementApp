@@ -2,7 +2,13 @@ package com.group55.project;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+/*
+    1. John Darrell Tamayo, 101452155
+    2. Ashish Rajan Sherry, 101423478
+    3. Jose Britto Saaji, 101416601
+    4. Akorede Osunkoya, 101477407
 
+ */
 public class Paycheck implements Serializable {
     
     private int employeeId;
