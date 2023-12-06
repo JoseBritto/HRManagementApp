@@ -2,6 +2,7 @@ package com.group55.project;
 
 import com.group55.project.ui.DepartmentManagementContent;
 import com.group55.project.ui.EmployeeManagementContent;
+import com.group55.project.ui.PayrollManagementContent;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -54,7 +55,7 @@ public class HRManagementApp extends Application {
         Tab departmentsTab = new Tab("Departments");
         departmentsTab.setContent(createDepartmentsContent());
         
-        Tab payrollTab = new Tab("Payroll Processing");
+        Tab payrollTab = new Tab("Payrolls");
         payrollTab.setContent(createPayrollProcessingContent());
 
         Tab reportingTab = new Tab("Reporting");
@@ -81,17 +82,7 @@ public class HRManagementApp extends Application {
     }
 
     private VBox createPayrollProcessingContent() {
-        VBox payrollContent = new VBox(10);
-        payrollContent.setPadding(new Insets(10));
-        payrollContent.getStyleClass().add("content");
-
-        payrollContent.getChildren().addAll(
-                new Label("Payroll Processing Content"),
-                new Button("Process Payroll"),
-                new Button("Generate Payroll Report")
-        );
-
-        return payrollContent;
+        return new PayrollManagementContent();
     }
 
     private VBox createReportingContent() {

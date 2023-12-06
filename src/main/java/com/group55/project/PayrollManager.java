@@ -1,5 +1,6 @@
 package com.group55.project;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,23 +32,50 @@ public class PayrollManager {
         this.payrolls = payrolls;
     }
     
-    public void addPayroll(Payroll payroll) {
-        payrolls.add(payroll);
+    public Payroll addPayroll(Payroll payroll) {
+        if(getPayroll(payroll.getEmployeeId()) == null) {
+            payrolls.add(payroll);
+            return payroll;
+        }
+        return null;
     }
     
     public void removePayroll(Payroll payroll) {
         payrolls.remove(payroll);
     }
     
-    public void updatePayroll(int employeeId, double salary, double bonuses, double deductions) {
+    public void updatePayroll(int employeeId, double hourlyWage) {
         for (Payroll payroll : payrolls) {
             if (payroll.getEmployeeId() == employeeId) {
-                payroll.setSalary(salary);
-                payroll.setBonus(bonuses);
-                payroll.setDeductions(deductions);
+                payroll.setHourlyWage(hourlyWage);
             }
         }
     }
     
+    public LocalDate getLastPayDate(int employeeId) {
+        Payroll payroll = getPayroll(employeeId);
+        if (payroll == null) {
+            return null;
+        }
+        List<Paycheck> paychecks = payroll.getPaychecks();
+        if (paychecks.size() == 0) {
+            return null;
+        }
+        return paychecks.get(paychecks.size() - 1).getPayPeriodEndDate();
+    }
+    
+    public double getLatestPay(int employeeId) {
+        Payroll payroll = getPayroll(employeeId);
+        if (payroll == null) {
+            return 0;
+        }
+        List<Paycheck> paychecks = payroll.getPaychecks();
+        if (paychecks.size() == 0) {
+            return 0;
+        }
+        Paycheck paycheck = paychecks.get(paychecks.size() - 1);
+        return paycheck.getBasePay() + paycheck.getOvertimePay() + paycheck.getBonus() - paycheck.getDeductions();
+    }
+       
     
 }

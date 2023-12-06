@@ -1,53 +1,72 @@
 package com.group55.project;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
 public class Payroll {
     
     private int employeeId;
-    private double salary;
-    private double bonus;
-    private double deductions;
-    
-    
+    private double hourlyWage;    
+    private List<Paycheck> paychecks;
 
-    public Payroll(int employeeId, double salary, double bonus, double deductions) {
+    
+    public Payroll(int employeeId, double hourlyWage, List<Paycheck> paychecks) {
         this.employeeId = employeeId;
-        this.salary = salary;
-        this.bonus = bonus;
-        this.deductions = deductions;
+        this.hourlyWage = hourlyWage;
+        this.paychecks = paychecks;
+    }
+    public Payroll(int employeeId, double hourlyWage) {
+        this(employeeId, hourlyWage, new ArrayList<>());
     }
 
     public int getEmployeeId() {
         return employeeId;
     }
 
-    public double getSalary() {
-        return salary;
+    public double getHourlyWage() {
+        return hourlyWage;
     }
 
-    public double getBonus() {
-        return bonus;
-    }
-
-    public double getDeductions() {
-        return deductions;
+    public void setHourlyWage(double hourlyWage) {
+        this.hourlyWage = hourlyWage;
     }
     
-
-    public void setSalary(double salary) {
-        this.salary = salary;
+    public List<Paycheck> getPaychecks() {
+        return paychecks;
     }
     
-    public void setBonus(double bonus) {
-        this.bonus = bonus;
+    public void setPaychecks(List<Paycheck> paychecks) {
+        this.paychecks = paychecks;
     }
     
-    public void setDeductions(double deductions) {
-        this.deductions = deductions;
+    public void addPaycheck(Paycheck paycheck) {
+        paychecks.add(paycheck);
     }
     
-    public double calculateNetSalary() {
-        // Net salary calculation logic here
-        return salary + bonus - deductions;
+    public void removePaycheck(Paycheck paycheck) {
+        paychecks.remove(paycheck);
     }
-
+    
+    public LocalDate getLatestPayPeriodEndDate() {
+        LocalDate latestPayPeriodEndDate = LocalDate.MIN;
+        for (Paycheck paycheck : paychecks) {
+            if (paycheck.getPayPeriodEndDate().isAfter(latestPayPeriodEndDate)) {
+                latestPayPeriodEndDate = paycheck.getPayPeriodEndDate();
+            }
+        }
+        return latestPayPeriodEndDate;
+    }
+    
+    public LocalDate getNextPayStartDate() {
+        LocalDate latestPayPeriodEndDate = getLatestPayPeriodEndDate();
+        if (latestPayPeriodEndDate == LocalDate.MIN) {
+            return LocalDate.now();
+        }
+        return latestPayPeriodEndDate.plusDays(1);
+    }
+    
+    public LocalDate getNextPayEndDate() {
+        return getNextPayStartDate().plusDays(13);
+    }
 }

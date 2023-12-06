@@ -92,6 +92,13 @@ public class EmployeeManagementContent extends VBox {
             return row;
         });
 
+        // Show edit dialog when user presses enter on a row
+        employeeTable.setOnKeyPressed(event -> {
+            if(event.getCode().equals(javafx.scene.input.KeyCode.ENTER)) {
+                editEmployeeAction();
+            }
+        });
+        
         DepartmentManager departmentManager = Coordinator.getInstance().getDepartmentManager();
         EmployeeManager employeeManager = Coordinator.getInstance().getEmployeeManager();
        
